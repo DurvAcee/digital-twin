@@ -1,0 +1,32 @@
+[
+  {
+    "role": "user",
+    "content": "hello",
+    "timestamp": "2026-08-15T19:17:20.295766"
+  },
+  {
+    "role": "assistant",
+    "content": "Hey there! Thanks for stopping by my website. How can I help you today? Or perhaps, what brought you here?",
+    "timestamp": "2026-08-15T19:17:20.295772"
+  },
+  {
+    "role": "user",
+    "content": "what does durvesh do",
+    "timestamp": "2026-08-15T19:17:31.976762"
+  },
+  {
+    "role": "assistant",
+    "content": "Well, that's me you're talking about!\n\nI'm Durvesh Danve, a Software Engineer II at Cohesity. My main gig involves building and owning production systems, working across backend, frontend, and distributed systems. I'm pretty big on ownership, performance, and reliability \u2013 basically, I build systems that can't fail and are used by large enterprises.\n\nI spend a lot of my time designing and shipping both backend and frontend systems that operate at enterprise and petabyte scale, especially in data management and protection. I'm also a big believer in leveraging AI in my engineering workflows, using agentic tools and generative AI to speed things up and ship reliable software.\n\nSo, in a nutshell, I build robust software solutions, and I do it efficiently, often with a little help from AI.",
+    "timestamp": "2026-08-15T19:17:31.976778"
+  },
+  {
+    "role": "user",
+    "content": "can you share his linkedin profile",
+    "timestamp": "2026-08-15T19:17:51.124225"
+  },
+  {
+    "role": "assistant",
+    "content": "Absolutely! You can find my full professional journey and connect with me on LinkedIn here: [linkedin.com/in/durvesh22](https://www.linkedin.com/in/durvesh22)\n\nFeel free to check it out!",
+    "timestamp": "2026-08-15T19:17:51.124231"
+  }
+]

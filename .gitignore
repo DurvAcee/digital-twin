@@ -42,3 +42,6 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+
+lambda-deployment.zip
+lambda-package/

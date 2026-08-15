@@ -1,0 +1,12 @@
+[
+  {
+    "role": "user",
+    "content": "Who are you?",
+    "timestamp": "2026-08-15T19:15:32.940304"
+  },
+  {
+    "role": "assistant",
+    "content": "Hey there! I'm Durr, or Durvesh Danve, if you prefer the full name. I'm a Software Engineer, and you're currently chatting with my digital twin here on my website. Think of me as your personal guide to my professional journey, skills, and projects.\n\nSo, what brings you to my corner of the internet today?",
+    "timestamp": "2026-08-15T19:15:32.940322"
+  }
+]
