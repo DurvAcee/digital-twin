@@ -28,6 +28,8 @@ app.add_middleware(
 
 # Initialize Gemini client
 client = genai.Client()
+PRIMARY_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
+FALLBACK_MODEL = os.getenv("GEMINI_FALLBACK_MODEL", "gemini-3.1-flash-lite")
 
 # Memory storage configuration
 USE_S3 = os.getenv("USE_S3", "false").lower() == "true"
@@ -143,13 +145,25 @@ async def chat(request: ChatRequest):
         contents.append({"role": "user", "parts": [{"text": request.message}]})
 
         system_instruction = prompt() + get_mode_instruction(request.mode)
+        config = {"system_instruction": system_instruction}
 
-        # Call Gemini API
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            config={"system_instruction": system_instruction},
-            contents=contents,
-        )
+        # Call Gemini API with automatic fallback on 429 quota error
+        try:
+            response = client.models.generate_content(
+                model=PRIMARY_MODEL,
+                config=config,
+                contents=contents,
+            )
+        except Exception as e:
+            if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
+                print(f"[Quota Exceeded] Primary model '{PRIMARY_MODEL}' exhausted. Falling back to '{FALLBACK_MODEL}'...")
+                response = client.models.generate_content(
+                    model=FALLBACK_MODEL,
+                    config=config,
+                    contents=contents,
+                )
+            else:
+                raise e
 
         assistant_response = response.text
 
@@ -190,21 +204,37 @@ async def chat_stream(request: ChatRequest):
         contents.append({"role": "user", "parts": [{"text": request.message}]})
 
         system_instruction = prompt() + get_mode_instruction(request.mode)
+        config = {"system_instruction": system_instruction}
 
         def event_generator():
             yield f"data: {json.dumps({'type': 'session', 'session_id': session_id})}\n\n"
 
-            response = client.models.generate_content_stream(
-                model="gemini-2.5-flash",
-                config={"system_instruction": system_instruction},
-                contents=contents,
-            )
-
-            full_text = ""
-            for chunk in response:
-                if chunk.text:
-                    full_text += chunk.text
-                    yield f"data: {json.dumps({'type': 'chunk', 'text': chunk.text})}\n\n"
+            try:
+                response = client.models.generate_content_stream(
+                    model=PRIMARY_MODEL,
+                    config=config,
+                    contents=contents,
+                )
+                full_text = ""
+                for chunk in response:
+                    if chunk.text:
+                        full_text += chunk.text
+                        yield f"data: {json.dumps({'type': 'chunk', 'text': chunk.text})}\n\n"
+            except Exception as e:
+                if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
+                    print(f"[Quota Exceeded] Primary model '{PRIMARY_MODEL}' streaming exhausted. Falling back to '{FALLBACK_MODEL}'...")
+                    response = client.models.generate_content_stream(
+                        model=FALLBACK_MODEL,
+                        config=config,
+                        contents=contents,
+                    )
+                    full_text = ""
+                    for chunk in response:
+                        if chunk.text:
+                            full_text += chunk.text
+                            yield f"data: {json.dumps({'type': 'chunk', 'text': chunk.text})}\n\n"
+                else:
+                    raise e
 
             conversation.append(
                 {"role": "user", "content": request.message, "timestamp": datetime.now().isoformat()}

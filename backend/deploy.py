@@ -16,29 +16,55 @@ def main():
     # Create package directory
     os.makedirs("lambda-package")
 
-    # Install dependencies using Docker with Lambda runtime image
+    # Install dependencies for Lambda runtime
     print("Installing dependencies for Lambda runtime...")
+    installed = False
 
-    # Use the official AWS Lambda Python 3.13 image
-    # This ensures compatibility with Lambda's runtime environment
-    subprocess.run(
-        [
-            "docker",
-            "run",
-            "--rm",
-            "-v",
-            f"{os.getcwd()}:/var/task",
-            "--platform",
-            "linux/amd64",  # Force x86_64 architecture
-            "--entrypoint",
-            "",  # Override the default entrypoint
-            "public.ecr.aws/lambda/python:3.13",
-            "/bin/sh",
-            "-c",
-            "pip install --target /var/task/lambda-package -r /var/task/requirements.txt --platform manylinux2014_x86_64 --only-binary=:all: --upgrade",
-        ],
-        check=True,
-    )
+    try:
+        docker_check = subprocess.run(["docker", "info"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if docker_check.returncode == 0:
+            print("Using Docker container for Lambda build...")
+            subprocess.run(
+                [
+                    "docker",
+                    "run",
+                    "--rm",
+                    "-v",
+                    f"{os.getcwd()}:/var/task",
+                    "--platform",
+                    "linux/amd64",
+                    "--entrypoint",
+                    "",
+                    "public.ecr.aws/lambda/python:3.13",
+                    "/bin/sh",
+                    "-c",
+                    "pip install --target /var/task/lambda-package -r /var/task/requirements.txt --platform manylinux2014_x86_64 --only-binary=:all: --upgrade",
+                ],
+                check=True,
+            )
+            installed = True
+    except Exception:
+        pass
+
+    if not installed:
+        print("Docker daemon not running. Falling back to native uv cross-compilation (x86_64-unknown-linux-gnu)...")
+        subprocess.run(
+            [
+                "uv",
+                "pip",
+                "install",
+                "--target",
+                "lambda-package",
+                "-r",
+                "requirements.txt",
+                "--python-platform",
+                "x86_64-unknown-linux-gnu",
+                "--python-version",
+                "3.13",
+            ],
+            check=True,
+        )
+
 
     # Copy application files
     print("Copying application files...")

@@ -26,8 +26,8 @@ const FEATURED_PROJECTS: ProjectCard[] = [
     {
         id: 'digital-twin',
         title: 'AI Digital Twin & Persona',
-        description: 'Serverless AI agent powered by Gemini 2.5 Flash, FastAPI, and Next.js with real-time SSE streaming.',
-        techStack: ['Python', 'FastAPI', 'Gemini 2.5', 'Next.js', 'AWS Lambda'],
+        description: 'Serverless AI agent powered by Gemini 3.5 Flash, FastAPI, and Next.js with real-time SSE streaming.',
+        techStack: ['Python', 'FastAPI', 'Gemini 3.5', 'Next.js', 'AWS Lambda'],
         askPrompt: 'Tell me more about the architecture and build of your AI Digital Twin project.',
         category: 'AI / Full Stack',
     },
@@ -783,7 +783,7 @@ export default function Twin() {
                     <span>&middot;</span>
                     <span>Powered by</span>
                     <span className="inline-flex items-center gap-1 font-mono bg-[#EFECE6] px-1.5 py-0.5 rounded text-[9px] text-[#1E1E1C]">
-                        Gemini 2.5 Flash
+                        Gemini 3.5 Flash
                     </span>
                     <span className="inline-flex items-center gap-1 font-mono bg-[#EFECE6] px-1.5 py-0.5 rounded text-[9px] text-[#1E1E1C]">
                         FastAPI

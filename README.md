@@ -16,7 +16,7 @@ An end-to-end AI-powered **Digital Twin** interactive web application. This proj
          ▼
 ┌─────────────────┐       HTTPS       ┌──────────────────┐       HTTPS       ┌────────────────────────┐
 │ AWS API Gateway ├──────────────────►│    AWS Lambda    ├──────────────────►│     Google Gemini      │
-│  (HTTP Router)  │                   │ (FastAPI Runtime)│                   │   (gemini-2.5-flash)   │
+│  (HTTP Router)  │                   │ (FastAPI Runtime)│                   │   (gemini-3.5-flash)   │
 └─────────────────┘                   └────────┬─────────┘                   └────────────────────────┘
                                                │
                                                ▼
@@ -29,8 +29,8 @@ An end-to-end AI-powered **Digital Twin** interactive web application. This proj
 The system is composed of decoupled components:
 
 1. **Frontend (Claude-Inspired UI)**: Built with **Next.js 15 (App Router)**, **TypeScript**, and **Tailwind CSS**. Styled with Anthropic Claude-inspired warm parchment tones (`#FAF9F5`), Google Fonts (**Outfit** & **Plus Jakarta Sans**), real-time **SSE Streaming**, **Hands-Free Voice Input** (Web Speech API), interactive **Featured Project Cards**, and **Markdown Code Highlighting** with 1-click code copy buttons. Hosted statically on **AWS S3** and distributed globally via **AWS CloudFront CDN**.
-2. **Backend (Serverless API & Streaming)**: Built with **FastAPI** on Python 3.13, exposing both standard `/chat` REST and real-time `/chat/stream` Server-Sent Events (SSE) endpoints. Deployed as a serverless **AWS Lambda** function behind **AWS API Gateway**. Connects to **Google Gemini (**`gemini-2.5-flash`**)** using the official `google-genai` SDK.
-  > **Note on LLM Provider Selection**: While **Amazon Bedrock Nova** (or OpenAI) can easily be swapped in as the underlying LLM backend for cloud-native setups, we chose **Google Gemini 2.5 Flash** for its exceptional speed, high token limits, and strong system prompt instruction adherence.
+2. **Backend (Serverless API & Streaming)**: Built with **FastAPI** on Python 3.13, exposing both standard `/chat` REST and real-time `/chat/stream` Server-Sent Events (SSE) endpoints. Deployed as a serverless **AWS Lambda** function behind **AWS API Gateway**. Connects to **Google Gemini (**`gemini-3.5-flash`**)** using the official `google-genai` SDK.
+  > **Note on LLM Provider Selection**: While **Amazon Bedrock Nova** (or OpenAI) can easily be swapped in as the underlying LLM backend for cloud-native setups, we chose **Google Gemini 3.5 Flash** for its exceptional speed, high token limits, and strong system prompt instruction adherence.
 3. **🧠 Session Memory Engine**:
   - Maintains **persistent multi-turn conversation memory** per session ID. Every turn automatically stores user and model exchanges.
   - Pluggable storage backend: saves memory locally as JSON files during development, and syncs to **AWS S3** (`boto3`) when deployed to production.
@@ -45,7 +45,7 @@ The system is composed of decoupled components:
 
 | Layer | Technologies & Tools |
 | :--- | :--- |
-| **AI / LLM Engine** | **Google Gemini 2.5 Flash** (`google-genai` SDK) *(Alternative: Amazon Bedrock Nova)* |
+| **AI / LLM Engine** | **Google Gemini 3.5 Flash** (`google-genai` SDK) *(Alternative: Amazon Bedrock Nova)* |
 | **Backend API** | **FastAPI**, Python 3.13, Uvicorn, Pydantic, `uv` |
 | **Session Memory** | **Multi-Turn Memory Engine** (AWS S3 Persistence / Local JSON Storage) |
 | **Build & Docker** | **Docker** (`public.ecr.aws/lambda/python:3.13` container for `linux/amd64` cross-compilation) |

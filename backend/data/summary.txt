@@ -23,7 +23,7 @@ Email: durvesh.danve@gmail.com | LinkedIn: linkedin.com/in/durvesh22 | GitHub: g
 - Reduced manual PR review cycles by 40% with automated CI/CD pre-deployment pipelines enforcing 85%+ unit test coverage.
 
 # Featured Projects & Innovations
-1. **AI Digital Twin & Persona**: Serverless AI agent powered by Gemini 2.5 Flash, FastAPI, Next.js, and AWS Lambda with real-time SSE streaming.
+1. **AI Digital Twin & Persona**: Serverless AI agent powered by Gemini 3.5 Flash, FastAPI, Next.js, and AWS Lambda with real-time SSE streaming.
 2. **Co-ordinated Attack Detection (CAD)**: AI cybersecurity platform detecting coordinated attacks on backup infrastructure using dual-stream GNN + temporal encoders with explainable AI (SHAP).
 3. **Second Brain Local RAG**: Privacy-first local RAG application integrating Ollama LLM, ONNX embeddings, ChromaDB, and Obsidian notes.
 
