@@ -1,6 +1,6 @@
 # AI Digital Twin 🤖✨
 
-An end-to-end AI-powered **Digital Twin** interactive web application. This project allows users to chat with a personal AI agent that faithfully represents **Durvesh Danve**'s background, skills, projects, and communication style.
+An end-to-end AI-powered **Digital Twin** interactive web application. This project allows users to chat with a personal AI agent that faithfully represents **Durvesh Danve**'s background, skills, key projects, and communication style.
 
 ---
 
@@ -9,10 +9,10 @@ An end-to-end AI-powered **Digital Twin** interactive web application. This proj
 ```text
 ┌─────────────────┐       HTTPS       ┌──────────────────┐       HTTPS       ┌────────────────────────┐
 │  Browser / User ├──────────────────►│  AWS CloudFront  ├──────────────────►│     AWS S3 Bucket      │
-│   (Next.js UI)  │                   │   (Global CDN)   │                   │    (Static Export)     │
+│ (Next.js 15 UI) │                   │   (Global CDN)   │                   │    (Static Export)     │
 └────────┬────────┘                   └──────────────────┘                   └────────────────────────┘
          │
-         │ API Requests (/chat)
+         │ Real-time SSE / REST (/chat/stream)
          ▼
 ┌─────────────────┐       HTTPS       ┌──────────────────┐       HTTPS       ┌────────────────────────┐
 │ AWS API Gateway ├──────────────────►│    AWS Lambda    ├──────────────────►│     Google Gemini      │
@@ -26,35 +26,35 @@ An end-to-end AI-powered **Digital Twin** interactive web application. This proj
                                       └──────────────────┘
 ```
 
-The system is composed of two main decoupled components:
+The system is composed of decoupled components:
 
-1. **Frontend (UI)**: Built with **Next.js (App Router)** and **Tailwind CSS**. It provides a sleek, responsive chat interface. Hosted statically on **AWS S3** and distributed globally via **AWS CloudFront CDN** for ultra-fast HTTPS delivery.
-2. **Backend (API)**: Built with **FastAPI** on Python 3.13, packaged via `deploy.py` and deployed as a serverless **AWS Lambda** function behind **AWS API Gateway**. Connects to **Google Gemini (**`gemini-2.5-flash`**)** using the official `google-genai` SDK.
-  > **Note on LLM Provider Selection**: While **Amazon Bedrock Nova** (or OpenAI) can easily be swapped in as the underlying LLM provider for cloud-native AWS setups, we chose **Google Gemini 2.5 Flash** for its exceptional speed, high token limits, and strong system prompt instruction adherence.
-3. **Context Engine & Memory**:
-  - Parses career facts (`facts.json`), LinkedIn PDF (`linkedin.pdf`), summary notes, and communication style guides into dynamic system instructions.
-  - Maintains multi-turn conversation memory per session ID (stored locally or synced to **AWS S3**).
+1. **Frontend (Claude-Inspired UI)**: Built with **Next.js 15 (App Router)**, **TypeScript**, and **Tailwind CSS**. Styled with Anthropic Claude-inspired warm parchment tones (`#FAF9F5`), Google Fonts (**Outfit** & **Plus Jakarta Sans**), real-time **SSE Streaming**, **Hands-Free Voice Input** (Web Speech API), interactive **Featured Project Cards**, and **Markdown Code Highlighting** with 1-click code copy buttons. Hosted statically on **AWS S3** and distributed globally via **AWS CloudFront CDN**.
+2. **Backend (Serverless API & Streaming)**: Built with **FastAPI** on Python 3.13, exposing both standard `/chat` REST and real-time `/chat/stream` Server-Sent Events (SSE) endpoints. Deployed as a serverless **AWS Lambda** function behind **AWS API Gateway**. Connects to **Google Gemini (**`gemini-2.5-flash`**)** using the official `google-genai` SDK.
+  > **Note on LLM Provider Selection**: While **Amazon Bedrock Nova** (or OpenAI) can easily be swapped in as the underlying LLM backend for cloud-native setups, we chose **Google Gemini 2.5 Flash** for its exceptional speed, high token limits, and strong system prompt instruction adherence.
+3. **🧠 Session Memory Engine**:
+  - Maintains **persistent multi-turn conversation memory** per session ID. Every turn automatically stores user and model exchanges.
+  - Pluggable storage backend: saves memory locally as JSON files during development, and syncs to **AWS S3** (`boto3`) when deployed to production.
+4. **🐳 Containerized Lambda Build Pipeline (Docker)**:
+  - Uses **Docker** (`public.ecr.aws/lambda/python:3.13` container for `linux/amd64`) in `deploy.py` to cross-compile dependencies and binary wheels for Amazon Linux, avoiding macOS ARM64 `GLIBC` binary mismatches.
+5. **Context Engine & Grounded Knowledge**:
+  - Parses career facts (`facts.json`), LinkedIn PDF (`linkedin.pdf`), summary notes, and communication style guides into dynamic system instructions tailored across 3 conversation modes (`Engineer` 🛠️, `Recruiter` 💼, `Casual` 💬).
 
 ---
-
-
 
 ## 🛠️ Tech Stack
 
-
-| Layer                   | Technologies & Tools                                                                  |
-| ----------------------- | ------------------------------------------------------------------------------------- |
-| **AI / LLM Engine**     | **Google Gemini 2.5 Flash** (`google-genai` SDK) *(Alternative: Amazon Bedrock Nova)* |
-| **Backend API**         | **FastAPI**, Python 3.13, Uvicorn, Pydantic, `uv`                                     |
-| **Frontend UI**         | **Next.js 15**, React 19, TypeScript, Tailwind CSS, Lucide Icons                      |
-| **Cloud Hosting (UI)**  | **AWS S3** (Static Website Hosting) + **AWS CloudFront** (Global CDN)                 |
-| **Cloud Compute (API)** | **AWS Lambda** (Python 3.13 runtime via Mangum) + **AWS API Gateway**                 |
-| **Package Management**  | `uv` (Fast Python package manager), `npm` (Frontend)                                  |
-
+| Layer | Technologies & Tools |
+| :--- | :--- |
+| **AI / LLM Engine** | **Google Gemini 2.5 Flash** (`google-genai` SDK) *(Alternative: Amazon Bedrock Nova)* |
+| **Backend API** | **FastAPI**, Python 3.13, Uvicorn, Pydantic, `uv` |
+| **Session Memory** | **Multi-Turn Memory Engine** (AWS S3 Persistence / Local JSON Storage) |
+| **Build & Docker** | **Docker** (`public.ecr.aws/lambda/python:3.13` container for `linux/amd64` cross-compilation) |
+| **Frontend UI** | **Next.js 15**, React 19, TypeScript, Tailwind CSS, Lucide Icons, Google Fonts (Outfit & Plus Jakarta Sans) |
+| **Cloud Hosting (UI)** | **AWS S3** (Static Website Hosting) + **AWS CloudFront** (Global CDN) |
+| **Cloud Compute (API)** | **AWS Lambda** (Python 3.13 runtime via Mangum) + **AWS API Gateway** |
+| **Package Management** | `uv` (Fast Python package manager), `npm` (Frontend) |
 
 ---
-
-
 
 ## 📁 Repository Structure
 
@@ -62,36 +62,31 @@ The system is composed of two main decoupled components:
 twin/
 ├── backend/
 │   ├── data/                 # Personal context sources (facts.json, linkedin.pdf, style.txt, summary.txt)
-│   ├── context.py            # System prompt generator combining context data
+│   ├── context.py            # Dynamic system prompt generator with conversation modes
 │   ├── resources.py          # PDF & data file parsers (pypdf)
-│   ├── server.py             # FastAPI endpoints (/chat, /health, /sessions, /conversation)
-│   ├── deploy.py             # AWS Lambda build packager
+│   ├── server.py             # FastAPI REST & SSE streaming endpoints with S3 session memory
+│   ├── deploy.py             # Docker-powered AWS Lambda build packager
 │   ├── requirements.txt      # Python dependencies
 │   └── pyproject.toml        # uv project configuration
 └── frontend/
-    ├── app/                  # Next.js App Router (layout.tsx, page.tsx)
-    ├── components/           # UI components (twin.tsx chat interface)
+    ├── app/                  # Next.js App Router (layout.tsx, globals.css, page.tsx)
+    ├── components/           # Claude-inspired UI components (twin.tsx chat interface)
     ├── public/               # Static assets
     └── package.json          # Frontend dependencies
 ```
 
 ---
 
-
-
 ## 🚀 Quick Start (Local Development)
-
-
 
 ### Prerequisites
 
 - Python >= 3.13
 - `[uv](https://github.com/astral-sh/uv)` (`curl -LsSf https://astral.sh/uv/install.sh | sh`)
 - Node.js >= 18 & `npm`
+- Docker Desktop (Required for AWS Lambda deployment packaging)
 
 ---
-
-
 
 ### 1. Backend Setup
 
@@ -112,8 +107,6 @@ Backend API will be running at `http://localhost:8000`.
 
 ---
 
-
-
 ### 2. Frontend Setup
 
 ```bash
@@ -130,22 +123,17 @@ Frontend UI will be running at `http://localhost:3000`.
 
 ---
 
-
-
 ## ☁️ Deployment Architecture
-
-
 
 ### Frontend (S3 + CloudFront)
 
 1. Build static export: `npm run build` (outputs to `out/`).
-2. Sync to S3 bucket: `aws s3 sync out/ s3://your-bucket-name --delete`.
+2. Sync to S3 bucket: `aws s3 sync out/ s3://twin-frontend-925893297149/ --delete`.
 3. Invalidate CloudFront cache: `aws cloudfront create-invalidation --distribution-id YOUR_DIST_ID --paths "/*"`.
 
+---
 
+### Backend (AWS Lambda + API Gateway via Docker)
 
-### Backend (AWS Lambda + API Gateway)
-
-1. Generate deployment zip: `uv run deploy.py` (outputs `lambda-deployment.zip`).
-2. Upload zip to AWS Lambda function configured with API Gateway HTTP trigger.
-
+1. Generate deployment zip: `uv run deploy.py` (runs Docker container `public.ecr.aws/lambda/python:3.13` to compile `lambda-deployment.zip`).
+2. Upload `lambda-deployment.zip` to AWS Lambda function configured with API Gateway HTTP trigger.
