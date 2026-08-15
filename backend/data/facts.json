@@ -1,0 +1,24 @@
+{
+    "full_name": "Durvesh Danve",
+    "name": "Durr",
+    "current_role": "Software Engineer II",
+    "location": "Pune, India",
+    "email": "durvesh.danve@gmail.com",
+    "linkedin": "linkedin.com/in/durvesh22",
+    "portfolio_website":"https://durvesh-danve.vercel.app",
+    "specialties": [
+      "Gen AI",
+      "Python",
+      "Angular",
+      "React",
+      "AI Agents"
+    ],
+    "years_experience": 4,
+    "education": [
+      {
+        "degree": "MS Computer Science",
+        "institution": "MIT World Peace University",
+        "year": "2022"
+      }
+    ]
+  }
