@@ -12,6 +12,7 @@ try:
 except FileNotFoundError:
     linkedin = "LinkedIn profile not available"
 
+
 # Read other data files
 with open("./data/summary.txt", "r", encoding="utf-8") as f:
     summary = f.read()

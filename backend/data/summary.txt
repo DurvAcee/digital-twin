@@ -1,7 +1,39 @@
-You are a chatbot acting as a "Digital Twin", representing Durvesh Danve on my website which is - "https://durvesh-danve.vercel.app" and engaging with visitors to the website
+Summary & Background Profile of Durvesh Danve
 
-Your goal is to answer questions acting as Durvesh Danve, to the best of your knowledge based on the provided context
+# Overview
+Durvesh Danve is a Senior Software Engineer with 4+ years of experience architecting and shipping enterprise-scale full-stack systems and performance-critical frontend applications serving 10,000+ enterprise clients. He specializes in TypeScript, Angular, React, Next.js, Python, Golang microservices, and AI-assisted agentic engineering workflows.
 
-Durvesh Danve is a Software Engineer with 4+ years building and delivering production frontend and full-stack systems (Angular, React, TypeScript, Python) at
-enterprise scale, serving 10,000+ enterprise customers. Builds with AI-assisted engineering workflows, using agentic tools and generative AI to
-accelerate engineering workflows and ship reliable production software. Open to relocation and global remote roles.
+Website & Portfolio: https://durvesh-danve.vercel.app
+Email: durvesh.danve@gmail.com | LinkedIn: linkedin.com/in/durvesh22 | GitHub: github.com/DurvAcee
+
+# Work Experience & Achievements
+
+## Software Engineer II — Cohesity (Dec 2024 - Present | Pune, India)
+- Architected and delivered 10+ enterprise full-stack features serving 10,000+ tenant environments across Golang microservices and Angular frontends.
+- Optimized platform performance, cutting initial page load times by 60% and JavaScript bundle size by 35% through Angular 16 module upgrades, code splitting, lazy loading, and HTTP caching.
+- Accelerated team engineering velocity by 30% by pioneering AI-assisted SDLC workflows using Cursor, Claude Code, and Model Context Protocol (MCP).
+- Engineered 4 high-availability Golang microservices for multi-tenant data protection featuring circuit breakers, fault-tolerant REST APIs, and indexed query optimizations.
+- mentored 4 junior developers and conducted org-wide technical workshops on AI-assisted engineering.
+
+## Software Engineer I — Veritas (Jan 2022 - Dec 2024 | Pune, India)
+- Led legacy frontend refactoring to Angular 16 across 15 core enterprise modules for a $1B+ ARR NetBackup platform, boosting feature velocity by 30%.
+- Standardized product-wide UI consistency with zero style overrides by architecting a WCAG 2.1 AA compliant SCSS design token system.
+- Reduced browser memory consumption from 450MB to 22MB at a steady 60 FPS by engineering virtualized table rendering for 100,000+ record datasets.
+- Mitigated supply chain security risks and bundle overhead by replacing 11 third-party UI dependencies with lightweight native utilities.
+- Reduced manual PR review cycles by 40% with automated CI/CD pre-deployment pipelines enforcing 85%+ unit test coverage.
+
+# Featured Projects & Innovations
+1. **AI Digital Twin & Persona**: Serverless AI agent powered by Gemini 2.5 Flash, FastAPI, Next.js, and AWS Lambda with real-time SSE streaming.
+2. **Co-ordinated Attack Detection (CAD)**: AI cybersecurity platform detecting coordinated attacks on backup infrastructure using dual-stream GNN + temporal encoders with explainable AI (SHAP).
+3. **Second Brain Local RAG**: Privacy-first local RAG application integrating Ollama LLM, ONNX embeddings, ChromaDB, and Obsidian notes.
+
+# Core Technical Skills
+- **Languages**: TypeScript, JavaScript (ES6+), Python, Go, HTML5, CSS3/SCSS, SQL
+- **Frontend Architecture**: Angular 16, React.js, Next.js, RxJS, DOM Virtualization, Web Vitals, SCSS Design Tokens, Jest, Cypress
+- **Backend & Cloud**: System Design, Microservices, REST APIs, FastAPI, Node.js, PostgreSQL, Redis, Docker, Kubernetes, AWS (S3, CloudFront, Lambda, API Gateway)
+- **AI & ML**: LLMs, Generative AI, RAG, Model Context Protocol (MCP), PyTorch, GNNs, Prompt Engineering, Agentic Workflows
+
+# Education & Honors
+- **M.S. in Computer Science**: MIT World Peace University (First Class Honors, GPA 3.9/4.0)
+- **B.S. in Computer Science**: Savitribai Phule Pune University (First Class with Distinction)
+- **Awards & Honors**: 2nd Rank Cohesity Hackathon (out of 175+ teams), 11x Employee Recognition Awards, 1st Ranker Academic Scholarship.

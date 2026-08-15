@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from google import genai
 import os
@@ -44,6 +45,7 @@ if USE_S3:
 class ChatRequest(BaseModel):
     message: str
     session_id: Optional[str] = None
+    mode: Optional[str] = "engineer"  # "engineer", "recruiter", "casual"
 
 
 class ChatResponse(BaseModel):
@@ -55,6 +57,17 @@ class Message(BaseModel):
     role: str
     content: str
     timestamp: str
+
+
+def get_mode_instruction(mode: Optional[str]) -> str:
+    """Return tailored mode instructions based on user selected mode"""
+    if mode == "recruiter":
+        return "\n\n[MODE INSTRUCTION: You are conversing with a Recruiter / Hiring Manager. Emphasize career impact, key achievements, project outcomes, leadership, and professional experience concisely.]"
+    elif mode == "casual":
+        return "\n\n[MODE INSTRUCTION: You are conversing with a casual visitor. Be friendly, approachable, easy to understand, and conversational while keeping it professional.]"
+    else:
+        # Default engineer mode
+        return "\n\n[MODE INSTRUCTION: You are conversing with a Software Engineer / Technical Peer. Focus on system architecture, code quality, trade-offs, infrastructure design, and technical depth.]"
 
 
 # Memory management functions
@@ -129,10 +142,12 @@ async def chat(request: ChatRequest):
 
         contents.append({"role": "user", "parts": [{"text": request.message}]})
 
+        system_instruction = prompt() + get_mode_instruction(request.mode)
+
         # Call Gemini API
         response = client.models.generate_content(
             model="gemini-2.5-flash",
-            config={"system_instruction": prompt()},
+            config={"system_instruction": system_instruction},
             contents=contents,
         )
 
@@ -157,6 +172,57 @@ async def chat(request: ChatRequest):
 
     except Exception as e:
         print(f"Error in chat endpoint: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/chat/stream")
+async def chat_stream(request: ChatRequest):
+    """Server-Sent Events (SSE) real-time streaming endpoint"""
+    try:
+        session_id = request.session_id or str(uuid.uuid4())
+        conversation = load_conversation(session_id)
+
+        contents = []
+        for msg in conversation[-10:]:
+            role = "model" if msg["role"] in ("assistant", "model") else "user"
+            contents.append({"role": role, "parts": [{"text": msg["content"]}]})
+
+        contents.append({"role": "user", "parts": [{"text": request.message}]})
+
+        system_instruction = prompt() + get_mode_instruction(request.mode)
+
+        def event_generator():
+            yield f"data: {json.dumps({'type': 'session', 'session_id': session_id})}\n\n"
+
+            response = client.models.generate_content_stream(
+                model="gemini-2.5-flash",
+                config={"system_instruction": system_instruction},
+                contents=contents,
+            )
+
+            full_text = ""
+            for chunk in response:
+                if chunk.text:
+                    full_text += chunk.text
+                    yield f"data: {json.dumps({'type': 'chunk', 'text': chunk.text})}\n\n"
+
+            conversation.append(
+                {"role": "user", "content": request.message, "timestamp": datetime.now().isoformat()}
+            )
+            conversation.append(
+                {
+                    "role": "assistant",
+                    "content": full_text,
+                    "timestamp": datetime.now().isoformat(),
+                }
+            )
+            save_conversation(session_id, conversation)
+            yield f"data: {json.dumps({'type': 'done'})}\n\n"
+
+        return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+    except Exception as e:
+        print(f"Error in chat stream endpoint: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
